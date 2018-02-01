@@ -1,6 +1,12 @@
 {
   "name": "node-grt",
+  "version": "0.0.1",
+  "description": "An implementation of the Gesture Recognition Toolkit (GRT) in node.js",
   "main": "index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
   "scripts": {
     "configure": "node-gyp configure",
     "build": "node-gyp build",
@@ -13,5 +19,22 @@
   },
   "dependencies": {
     "bindings": "^1.2.1"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KanoComputing/node-grt.git"
+  },
+  "keywords": [
+    "gesture",
+    "recognition",
+    "toolkit",
+    "grt"
+  ],
+  "author": "Kano Computing",
+  "license": "MIT",
+  "gypfile": true,
+  "bugs": {
+    "url": "https://github.com/KanoComputing/node-grt/issues"
+  },
+  "homepage": "https://github.com/KanoComputing/node-grt#readme"
 }
