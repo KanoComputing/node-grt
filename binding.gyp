@@ -6,7 +6,7 @@
             "sources": [ "NativeExtension.cc", "src/NodeTimeSeriesClassificationData.cc", "src/NodeDTW.cc" ],
             "include_dirs" : [
                 "<!(node -e \"require('nan')\")",
- 	 			"./include"
+ 	 			"./include",
 			],
             "conditions": [
                 ['OS=="mac"',
@@ -14,14 +14,27 @@
                         "libraries": [
                             "<!(pwd)/lib/libgrt.a"
                         ],
-                        "xcode_settings": { "GCC_ENABLE_CPP_EXCEPTIONS": "YES",  "GCC_ENABLE_CPP_RTTI": "YES", },
+                        "xcode_settings": {
+                            "GCC_ENABLE_CPP_EXCEPTIONS": "YES",
+                            "GCC_ENABLE_CPP_RTTI": "YES",
+                        },
                     }
                 ],
                 ['OS=="win"',
                     {
                         "libraries": [
-                            ""
-                        ]
+                            "<!(cd)/lib/grt.lib",
+                        ],
+                        "msvs_settings": {
+                            "VCCLCompilerTool": {
+                                "RuntimeTypeInfo": 'true',
+                                'RuntimeLibrary': 'false',
+                                "AdditionalOptions": [
+                                    "/D NOMINMAX",
+                                    "/D GRT_STATIC_LIB",
+                                ],
+                            },
+                        }
                     }
                 ]
             ]
