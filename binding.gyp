@@ -14,7 +14,11 @@
                         "libraries": [
                             "<!(pwd)/lib/libgrt.a"
                         ],
-                        "xcode_settings": { "GCC_ENABLE_CPP_EXCEPTIONS": "YES",  "GCC_ENABLE_CPP_RTTI": "YES", },
+                        "xcode_settings": {
+                            "GCC_ENABLE_CPP_EXCEPTIONS": "YES",
+                            "GCC_ENABLE_CPP_RTTI": "YES",
+                            "OTHER_CFLAGS": ["-std=c++11", "-stdlib=libc++"]
+                        },
                     }
                 ],
                 ['OS=="win"',
