@@ -6,7 +6,7 @@
             "sources": [ "NativeExtension.cc", "src/NodeTimeSeriesClassificationData.cc", "src/NodeDTW.cc" ],
             "include_dirs" : [
                 "<!(node -e \"require('nan')\")",
- 	 			"./include"
+ 	 			"./include",
 			],
             "conditions": [
                 ['OS=="mac"',
@@ -24,8 +24,18 @@
                 ['OS=="win"',
                     {
                         "libraries": [
-                            ""
-                        ]
+                            "<!(cd)/lib/grt.lib",
+                        ],
+                        "msvs_settings": {
+                            "VCCLCompilerTool": {
+                                "RuntimeTypeInfo": 'true',
+                                'RuntimeLibrary': 'false',
+                                "AdditionalOptions": [
+                                    "/D NOMINMAX",
+                                    "/D GRT_STATIC_LIB",
+                                ],
+                            },
+                        }
                     }
                 ]
             ]
