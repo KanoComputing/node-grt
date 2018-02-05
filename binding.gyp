@@ -17,8 +17,14 @@
                         "xcode_settings": {
                             "GCC_ENABLE_CPP_EXCEPTIONS": "YES",
                             "GCC_ENABLE_CPP_RTTI": "YES",
-                            "OTHER_CFLAGS": ["-std=c++11", "-stdlib=libc++"]
                         },
+                    }
+                ],
+                ['OS=="mac" and <!(node -e "console.log(parseInt(os.release()) > 15 ? 1 : 0)")',
+                    {
+                        "xcode_settings": {
+                            "OTHER_CFLAGS": ["-std=c++11", "-stdlib=libc++"]
+                        }
                     }
                 ],
                 ['OS=="win"',
