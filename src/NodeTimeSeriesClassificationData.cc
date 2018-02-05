@@ -13,6 +13,7 @@ NAN_MODULE_INIT(NodeTimeSeriesClassificationData::Init) {
     Nan::SetPrototypeMethod(tpl, "addSample", AddSample);
     Nan::SetPrototypeMethod(tpl, "save", Save);
     Nan::SetPrototypeMethod(tpl, "load", Load);
+    Nan::SetPrototypeMethod(tpl, "clear", Clear);
 
     constructor.Reset(Nan::GetFunction(tpl).ToLocalChecked());
     Nan::Set(target, Nan::New("TimeSeriesClassificationData").ToLocalChecked(), Nan::GetFunction(tpl).ToLocalChecked());
@@ -149,6 +150,11 @@ NAN_METHOD(NodeTimeSeriesClassificationData::Save) {
     bool returnValue = obj->tscd->save(fileName);
     std::cout << "Saving training data, success: " << std::boolalpha << returnValue << std::endl;
     info.GetReturnValue().Set(returnValue);
+}
+
+NAN_METHOD(NodeTimeSeriesClassificationData::Clear) {
+    NodeTimeSeriesClassificationData* obj = Nan::ObjectWrap::Unwrap<NodeTimeSeriesClassificationData>(info.This());
+    obj->tscd->clear();
 }
 
 NAN_METHOD(NodeTimeSeriesClassificationData::New) {
