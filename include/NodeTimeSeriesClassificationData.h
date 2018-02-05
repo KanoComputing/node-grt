@@ -21,6 +21,7 @@ class NodeTimeSeriesClassificationData : public Nan::ObjectWrap {
         static NAN_METHOD(AddSample);
         static NAN_METHOD(Load);
         static NAN_METHOD(Save);
+        static NAN_METHOD(Clear);
         static Nan::Persistent<v8::Function> constructor;
         GRT::TimeSeriesClassificationData *tscd;
 };
