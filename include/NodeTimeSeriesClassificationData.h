@@ -18,7 +18,10 @@ class NodeTimeSeriesClassificationData : public Nan::ObjectWrap {
         static NAN_METHOD(New);
         static NAN_METHOD(SetNumDimensions);
         static NAN_METHOD(GetNumDimensions);
+        static NAN_METHOD(SetDatasetName);
+        static NAN_METHOD(SetInfoText);
         static NAN_METHOD(AddSample);
+        static NAN_METHOD(GetNumSamples);
         static NAN_METHOD(Load);
         static NAN_METHOD(Save);
         static NAN_METHOD(Clear);
