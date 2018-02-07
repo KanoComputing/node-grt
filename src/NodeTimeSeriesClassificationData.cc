@@ -10,9 +10,12 @@ NAN_MODULE_INIT(NodeTimeSeriesClassificationData::Init) {
     
     Nan::SetPrototypeMethod(tpl, "setNumDimensions", SetNumDimensions);
     Nan::SetPrototypeMethod(tpl, "getNumDimensions", GetNumDimensions);
+    Nan::SetPrototypeMethod(tpl, "setDatasetName", SetDatasetName);
+    Nan::SetPrototypeMethod(tpl, "setInfoText", SetInfoText);
     Nan::SetPrototypeMethod(tpl, "addSample", AddSample);
-    Nan::SetPrototypeMethod(tpl, "save", Save);
+    Nan::SetPrototypeMethod(tpl, "getNumSamples", GetNumSamples);
     Nan::SetPrototypeMethod(tpl, "load", Load);
+    Nan::SetPrototypeMethod(tpl, "save", Save);
     Nan::SetPrototypeMethod(tpl, "clear", Clear);
 
     constructor.Reset(Nan::GetFunction(tpl).ToLocalChecked());
@@ -23,23 +26,23 @@ NodeTimeSeriesClassificationData::NodeTimeSeriesClassificationData() {
     tscd = new GRT::TimeSeriesClassificationData();
 }
 
-NodeTimeSeriesClassificationData::~NodeTimeSeriesClassificationData() {   
+NodeTimeSeriesClassificationData::~NodeTimeSeriesClassificationData() {
 }
 
 GRT::TimeSeriesClassificationData* NodeTimeSeriesClassificationData::getTimeSeriesClassificationData() {
     return tscd;
 }
 
-
 NAN_METHOD(NodeTimeSeriesClassificationData::SetNumDimensions) {
     v8::Isolate* isolate = info.GetIsolate();
-    
+
     if (info.Length() < 1) {
-        isolate->ThrowException(v8::Exception::Error(v8::String::NewFromUtf8(isolate, "Wrong number of arguments")));
+        std::string argsLength = std::to_string(info.Length());
+        isolate->ThrowException(v8::Exception::Error(v8::String::NewFromUtf8(isolate, ("Wrong number of arguments: expected 1, got " + argsLength).c_str())));
         return;
     }
     
-    if (!info[0]->IsNumber()) {
+    if (!info[0]->IsInt32()) {
         isolate->ThrowException(v8::Exception::Error(v8::String::NewFromUtf8(isolate, "Wrong argument")));
         return;
     }
@@ -48,7 +51,6 @@ NAN_METHOD(NodeTimeSeriesClassificationData::SetNumDimensions) {
     
     int dimensions = ( int )( info[0]->Int32Value() );
     bool returnValue = obj->tscd->setNumDimensions(dimensions);
-    // std::cout << "Dimensions: " << dimensions << std::endl;
     info.GetReturnValue().Set(returnValue);
 }
 
@@ -61,19 +63,62 @@ NAN_METHOD(NodeTimeSeriesClassificationData::GetNumDimensions) {
     info.GetReturnValue().Set(returnValue);
 }
 
+NAN_METHOD(NodeTimeSeriesClassificationData::SetDatasetName) {
+        v8::Isolate* isolate = info.GetIsolate();
+
+    if (info.Length() < 1) {
+        isolate->ThrowException(v8::Exception::Error(v8::String::NewFromUtf8(isolate, "Wrong number of arguments")));
+        return;
+    }
+
+    if (!info[0]->IsString()) {
+        isolate->ThrowException(v8::Exception::Error(v8::String::NewFromUtf8(isolate, "Wrong argument")));
+        return;
+    }
+
+    v8::String::Utf8Value param1(info[0]->ToString());
+    std::string name = std::string(*param1);
+
+    NodeTimeSeriesClassificationData* obj = Nan::ObjectWrap::Unwrap<NodeTimeSeriesClassificationData>(info.This());
+    bool returnValue = obj->tscd->setDatasetName(name);
+    info.GetReturnValue().Set(returnValue);
+}
+
+NAN_METHOD(NodeTimeSeriesClassificationData::SetInfoText) {
+        v8::Isolate* isolate = info.GetIsolate();
+
+    if (info.Length() < 1) {
+        isolate->ThrowException(v8::Exception::Error(v8::String::NewFromUtf8(isolate, "Wrong number of arguments")));
+        return;
+    }
+
+    if (!info[0]->IsString()) {
+        isolate->ThrowException(v8::Exception::Error(v8::String::NewFromUtf8(isolate, "Wrong argument")));
+        return;
+    }
+
+    v8::String::Utf8Value param1(info[0]->ToString());
+    std::string name = std::string(*param1);
+
+    NodeTimeSeriesClassificationData* obj = Nan::ObjectWrap::Unwrap<NodeTimeSeriesClassificationData>(info.This());
+    bool returnValue = obj->tscd->setInfoText(name);
+    info.GetReturnValue().Set(returnValue);
+}
+
+
 NAN_METHOD(NodeTimeSeriesClassificationData::AddSample) {
     v8::Isolate* isolate = info.GetIsolate();
-    
+
     if (info.Length() < 2) {
         isolate->ThrowException(v8::Exception::Error(v8::String::NewFromUtf8(isolate, "Wrong number of arguments")));
         return;
     }
-    
-    if (!info[0]->IsNumber()) {
+
+    if (!info[0]->IsInt32()) {
         isolate->ThrowException(v8::Exception::Error(v8::String::NewFromUtf8(isolate, "Wrong argument")));
         return;
     }
-    
+
     NodeTimeSeriesClassificationData* obj = Nan::ObjectWrap::Unwrap<NodeTimeSeriesClassificationData>(info.This());
 
     if (!info[1]->IsArray()) {
@@ -92,10 +137,12 @@ NAN_METHOD(NodeTimeSeriesClassificationData::AddSample) {
         val = jsArray->Get(i);
         if (!val->IsArray()) {
             isolate->ThrowException(v8::Exception::Error(v8::String::NewFromUtf8(isolate, "Wrong argument")));
+            return;
         }
         item = v8::Handle<v8::Array>::Cast(val);
         if (item->Length() != obj->tscd->getNumDimensions()) {
-            isolate->ThrowException(v8::Exception::Error(v8::String::NewFromUtf8(isolate, "Wrong argument")));
+            isolate->ThrowException(v8::Exception::Error(v8::String::NewFromUtf8(isolate, "Incorrect dimension in sample")));
+            return;
         }
         for (unsigned int j = 0; j < item->Length(); j++) {
             itemVal = item->Get(j);
@@ -105,22 +152,30 @@ NAN_METHOD(NodeTimeSeriesClassificationData::AddSample) {
         sample.push_back(vector);
         vector.clear();
     }
-    obj->tscd->addSample(label, sample);
+
+    bool returnValue =obj->tscd->addSample(label, sample);
+    info.GetReturnValue().Set(returnValue);
+}
+
+NAN_METHOD(NodeTimeSeriesClassificationData::GetNumSamples) {
+    NodeTimeSeriesClassificationData* obj = Nan::ObjectWrap::Unwrap<NodeTimeSeriesClassificationData>(info.This());
+    int returnValue = obj->tscd->getNumSamples();
+    info.GetReturnValue().Set(returnValue);
 }
 
 NAN_METHOD(NodeTimeSeriesClassificationData::Load) {
     v8::Isolate* isolate = info.GetIsolate();
-    
+
     if (info.Length() < 1) {
         isolate->ThrowException(v8::Exception::Error(v8::String::NewFromUtf8(isolate, "Wrong number of arguments")));
         return;
     }
-    
+
     if (!info[0]->IsString()) {
         isolate->ThrowException(v8::Exception::Error(v8::String::NewFromUtf8(isolate, "Wrong argument")));
         return;
     }
-    
+
     v8::String::Utf8Value param1(info[0]->ToString());
     std::string fileName = std::string(*param1);
     
@@ -137,12 +192,12 @@ NAN_METHOD(NodeTimeSeriesClassificationData::Save) {
         isolate->ThrowException(v8::Exception::Error(v8::String::NewFromUtf8(isolate, "Wrong number of arguments")));
         return;
     }
-    
+
     if (!info[0]->IsString()) {
         isolate->ThrowException(v8::Exception::Error(v8::String::NewFromUtf8(isolate, "Wrong argument")));
         return;
     }
-    
+
     v8::String::Utf8Value param1(info[0]->ToString());
     std::string fileName = std::string(*param1);
     

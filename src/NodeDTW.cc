@@ -8,7 +8,7 @@ NAN_MODULE_INIT(NodeDTW::Init) {
     v8::Local<v8::FunctionTemplate> tpl = Nan::New<v8::FunctionTemplate>(New);
     tpl->SetClassName(Nan::New("DTW").ToLocalChecked());
     tpl->InstanceTemplate()->SetInternalFieldCount(1);
-    
+
     Nan::SetPrototypeMethod(tpl, "train", Train);
     Nan::SetPrototypeMethod(tpl, "predict", Predict);
     Nan::SetPrototypeMethod(tpl, "getPredictedClassLabel", GetPredictedClassLabel);
@@ -27,26 +27,27 @@ NodeDTW::~NodeDTW() {
 
 NAN_METHOD(NodeDTW::Train) {
     v8::Isolate* isolate = info.GetIsolate();
-    
+
     if (info.Length() < 1) {
         isolate->ThrowException(v8::Exception::Error(v8::String::NewFromUtf8(isolate, "Wrong number of arguments")));
         return;
     }
-    
+
     NodeDTW* obj = Nan::ObjectWrap::Unwrap<NodeDTW>(info.This());
     NodeTimeSeriesClassificationData* data = Nan::ObjectWrap::Unwrap<NodeTimeSeriesClassificationData>(info[0]->ToObject());
-    
-    obj->dtw->train(*data->getTimeSeriesClassificationData());
+
+    bool returnValue = obj->dtw->train(*data->getTimeSeriesClassificationData());
+    info.GetReturnValue().Set(returnValue);
 }
 
 NAN_METHOD(NodeDTW::Predict) {
     v8::Isolate* isolate = info.GetIsolate();
-    
+
     if (info.Length() < 1) {
         isolate->ThrowException(v8::Exception::Error(v8::String::NewFromUtf8(isolate, "Wrong number of arguments")));
         return;
     }
-    
+
     NodeDTW* obj = Nan::ObjectWrap::Unwrap<NodeDTW>(info.This());
     if (!info[0]->IsArray()) {
         isolate->ThrowException(v8::Exception::Error(v8::String::NewFromUtf8(isolate, "Wrong argument")));
@@ -73,7 +74,8 @@ NAN_METHOD(NodeDTW::Predict) {
         sample.push_back(vector);
         vector.clear();
     }
-    obj->dtw->predict(sample);
+    bool returnValue = obj->dtw->predict(sample);
+    info.GetReturnValue().Set(returnValue);
 }
 
 NAN_METHOD(NodeDTW::GetPredictedClassLabel) {
