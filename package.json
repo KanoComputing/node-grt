@@ -1,6 +1,6 @@
 {
   "name": "node-grt",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "An implementation of the Gesture Recognition Toolkit (GRT) in node.js",
   "main": "index.js",
   "directories": {
