@@ -4,8 +4,6 @@
 #include <nan.h>
 #include <GRT/GRT.h>
 
-// Example with node ObjectWrap
-// Based on https://nodejs.org/api/addons.html#addons_wrapping_c_objects but using NAN
 class NodeDTW : public Nan::ObjectWrap {
     public:
         static NAN_MODULE_INIT(Init);
