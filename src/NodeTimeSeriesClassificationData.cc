@@ -26,6 +26,10 @@ NodeTimeSeriesClassificationData::NodeTimeSeriesClassificationData() {
     tscd = new GRT::TimeSeriesClassificationData();
 }
 
+NodeTimeSeriesClassificationData::NodeTimeSeriesClassificationData(const uint numDimensions) {
+    tscd = new GRT::TimeSeriesClassificationData(numDimensions);
+}
+
 NodeTimeSeriesClassificationData::~NodeTimeSeriesClassificationData() {
 }
 
@@ -57,14 +61,12 @@ NAN_METHOD(NodeTimeSeriesClassificationData::SetNumDimensions) {
 NAN_METHOD(NodeTimeSeriesClassificationData::GetNumDimensions) {
 
     NodeTimeSeriesClassificationData* obj = Nan::ObjectWrap::Unwrap<NodeTimeSeriesClassificationData>(info.This());
-    
     int returnValue = obj->tscd->getNumDimensions();
-    std::cout << "Dimensions: " << returnValue << std::endl;
     info.GetReturnValue().Set(returnValue);
 }
 
 NAN_METHOD(NodeTimeSeriesClassificationData::SetDatasetName) {
-        v8::Isolate* isolate = info.GetIsolate();
+    v8::Isolate* isolate = info.GetIsolate();
 
     if (info.Length() < 1) {
         isolate->ThrowException(v8::Exception::Error(v8::String::NewFromUtf8(isolate, "Wrong number of arguments")));
@@ -85,7 +87,7 @@ NAN_METHOD(NodeTimeSeriesClassificationData::SetDatasetName) {
 }
 
 NAN_METHOD(NodeTimeSeriesClassificationData::SetInfoText) {
-        v8::Isolate* isolate = info.GetIsolate();
+    v8::Isolate* isolate = info.GetIsolate();
 
     if (info.Length() < 1) {
         isolate->ThrowException(v8::Exception::Error(v8::String::NewFromUtf8(isolate, "Wrong number of arguments")));
@@ -213,12 +215,18 @@ NAN_METHOD(NodeTimeSeriesClassificationData::Clear) {
 }
 
 NAN_METHOD(NodeTimeSeriesClassificationData::New) {
-  if (info.IsConstructCall()) {
-    NodeTimeSeriesClassificationData *obj = new NodeTimeSeriesClassificationData();
-    obj->Wrap(info.This());
-    info.GetReturnValue().Set(info.This());
-  } else {
-    v8::Local<v8::Function> cons = Nan::New(constructor);
-    info.GetReturnValue().Set(cons->NewInstance());
-  }
+    if (info.IsConstructCall()) {
+        NodeTimeSeriesClassificationData *obj = NULL;
+        if (info.Length() == 1 && info[0]->IsNumber()) {
+            const uint numDimensions = ( uint )( info[0]->Uint32Value() );
+            obj = new NodeTimeSeriesClassificationData(numDimensions);
+        } else {
+            obj = new NodeTimeSeriesClassificationData();
+        }
+        obj->Wrap(info.This());
+        info.GetReturnValue().Set(info.This());
+    } else {
+        v8::Local<v8::Function> cons = Nan::New(constructor);
+        info.GetReturnValue().Set(cons->NewInstance());
+    }
 }

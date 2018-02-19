@@ -1,9 +1,9 @@
 {
     "targets": [
         {
-            "target_name": "NativeExtension",
+            "target_name": "GRT",
             "cflags_cc": ["-std=c++11", "-fexceptions", "-frtti"],
-            "sources": [ "NativeExtension.cc", "src/NodeTimeSeriesClassificationData.cc", "src/NodeDTW.cc" ],
+            "sources": ["src/GRT.cc", "src/NodeTimeSeriesClassificationData.cc", "src/NodeDTW.cc", "src/NodeHMM.cc", "src/NodeKMeansQuantizer.cc"],
             "include_dirs" : [
                 "<!(node -e \"require('nan')\")",
  	 			"./include",

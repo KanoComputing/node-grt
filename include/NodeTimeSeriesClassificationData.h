@@ -4,8 +4,6 @@
 #include <nan.h>
 #include <GRT/GRT.h>
 
-// Example with node ObjectWrap
-// Based on https://nodejs.org/api/addons.html#addons_wrapping_c_objects but using NAN
 class NodeTimeSeriesClassificationData : public Nan::ObjectWrap {
     public:
         static NAN_MODULE_INIT(Init);
@@ -13,6 +11,7 @@ class NodeTimeSeriesClassificationData : public Nan::ObjectWrap {
 
     private:
         explicit NodeTimeSeriesClassificationData();
+        explicit NodeTimeSeriesClassificationData(const uint numDimensions);
         ~NodeTimeSeriesClassificationData();
 
         static NAN_METHOD(New);
