@@ -282,6 +282,35 @@ describe('HMM', function() {
         }));
         assert.equal(hmmAlgorithm.train(quantisedData), true);
     });
+
+    // predict
+
+    it('predict should throw an error with wrong number of arguments', function() {
+        expect(() => hmmAlgorithm.predict()).to.throw('Wrong number of arguments');
+    });
+
+    it('predict should throw an error if argument is not an array', function() {
+        expect(() => hmmAlgorithm.predict('foo', [])).to.throw('Wrong argument');
+    });
+
+    it('predict should throw an error if argument is not a two-dimensional array', function() {
+        expect(() => hmmAlgorithm.predict([1])).to.throw('Wrong argument');
+    });
+
+    it('predict should return true when calling the method with one array argument with the correct dimension', function() {
+        assert.equal(hmmAlgorithm.predict([[1]]), true);
+    });
+
+    // getPredictedClassLabel
+
+    it('getPredictedClassLabel should return the correct label', function() {
+        assert.equal(hmmAlgorithm.getPredictedClassLabel(), 1);
+    });
+
+    // getClassLikelihoods
+    it('getClassLikelihoods should return 1 if sample and trainingData is a perfect match', function() {
+        assert.equal(hmmAlgorithm.getClassLikelihoods(), 1);
+    });
 });
 
 describe('KMeansQuantizer', function() {
