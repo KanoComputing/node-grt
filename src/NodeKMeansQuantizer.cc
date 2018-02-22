@@ -22,7 +22,7 @@ NodeKMeansQuantizer::NodeKMeansQuantizer() {
     kmeansquantizer = new GRT::KMeansQuantizer();
 }
 
-NodeKMeansQuantizer::NodeKMeansQuantizer(const uint numClusters) {
+NodeKMeansQuantizer::NodeKMeansQuantizer(const UINT numClusters) {
     kmeansquantizer = new GRT::KMeansQuantizer(numClusters);
 }
 
@@ -96,7 +96,7 @@ NAN_METHOD(NodeKMeansQuantizer::New) {
     if (info.IsConstructCall()) {
         NodeKMeansQuantizer *obj = NULL;
         if (info.Length() == 1) {
-            const uint numClusters = ( uint )( info[0]->Uint32Value() );
+            const UINT numClusters = ( UINT )( info[0]->Uint32Value() );
             obj = new NodeKMeansQuantizer(numClusters);
         } else {
             obj = new NodeKMeansQuantizer();

@@ -11,7 +11,7 @@ class NodeTimeSeriesClassificationData : public Nan::ObjectWrap {
 
     private:
         explicit NodeTimeSeriesClassificationData();
-        explicit NodeTimeSeriesClassificationData(const uint numDimensions);
+        explicit NodeTimeSeriesClassificationData(const UINT numDimensions);
         ~NodeTimeSeriesClassificationData();
 
         static NAN_METHOD(New);

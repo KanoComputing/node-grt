@@ -26,7 +26,7 @@ NodeTimeSeriesClassificationData::NodeTimeSeriesClassificationData() {
     tscd = new GRT::TimeSeriesClassificationData();
 }
 
-NodeTimeSeriesClassificationData::NodeTimeSeriesClassificationData(const uint numDimensions) {
+NodeTimeSeriesClassificationData::NodeTimeSeriesClassificationData(const UINT numDimensions) {
     tscd = new GRT::TimeSeriesClassificationData(numDimensions);
 }
 
@@ -218,7 +218,7 @@ NAN_METHOD(NodeTimeSeriesClassificationData::New) {
     if (info.IsConstructCall()) {
         NodeTimeSeriesClassificationData *obj = NULL;
         if (info.Length() == 1 && info[0]->IsNumber()) {
-            const uint numDimensions = ( uint )( info[0]->Uint32Value() );
+            const UINT numDimensions = ( UINT )( info[0]->Uint32Value() );
             obj = new NodeTimeSeriesClassificationData(numDimensions);
         } else {
             obj = new NodeTimeSeriesClassificationData();

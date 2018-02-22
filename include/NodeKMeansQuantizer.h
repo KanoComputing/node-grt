@@ -10,7 +10,7 @@ class NodeKMeansQuantizer : public Nan::ObjectWrap {
 
     private:
         explicit NodeKMeansQuantizer();
-        explicit NodeKMeansQuantizer(const uint numClusters);
+        explicit NodeKMeansQuantizer(const UINT numClusters);
         ~NodeKMeansQuantizer();
 
         static NAN_METHOD(New);
