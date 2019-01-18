@@ -1,5 +1,7 @@
 # node-grt
 
+🚨 Incomplete and unmaintained proof of concept. 🚨
+
 An implementation of Nick Gillian's Gesture Recognition Toolkit ([GRT](https://github.com/nickgillian/grt)) in node.js
 
 ## Installation
